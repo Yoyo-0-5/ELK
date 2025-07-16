@@ -1,6 +1,7 @@
 - 取得檔案
 ```
 git clone https://github.com/grimreaperes00/ELK.git
+git checkout yoyo
 ```
 - 進入檔案下
 ```
