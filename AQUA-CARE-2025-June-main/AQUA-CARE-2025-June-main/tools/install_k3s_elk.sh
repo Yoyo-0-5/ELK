@@ -64,7 +64,8 @@ helm upgrade --install filebeat elastic/filebeat -f filebeat/values.yml
 sleep 1
 echo "安裝 logstash..."
 helm upgrade --install logstash elastic/logstash -f logstash/values.yml
-sleep 1
+echo "等待 elasticsearch 安裝完成..."
+sleep 300
 echo "安裝 kibana..."
 helm upgrade --install kibana elastic/kibana -f kibana/values.yml
 sleep 1

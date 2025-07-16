@@ -18,8 +18,10 @@ logstashConfig: {}
 logstashPipeline:
   logstash.conf: |
     input {
-      beats {
-        port => 5044
+      generator {
+        message => "Hello world!"
+        count => 0
+        threads => 10
       }
     }
     output { 
