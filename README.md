@@ -1,11 +1,12 @@
 - 取得檔案
 ```
 git clone https://github.com/Yoyo-0-5/ELK.git
+cd ELK
 git checkout yoyo
 ```
 - 進入檔案下
 ```
-cd ELK/AQUA-CARE-2025-June-main/AQUA-CARE-2025-June-main
+cd AQUA-CARE-2025-June-main/AQUA-CARE-2025-June-main
 ```
 - 執行腳本
 ```
