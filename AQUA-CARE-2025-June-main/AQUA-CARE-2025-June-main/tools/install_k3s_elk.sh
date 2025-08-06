@@ -1,4 +1,5 @@
 #!/bin/bash
+export PATH=/usr/local/bin:$PATH
 # filepath: scripts/install_k3s_auto.sh
 
 set -e
@@ -11,9 +12,9 @@ sudo dnf install python3.12-pip -y
 sleep 1
 python3.12 -m ensurepip --upgrade
 sleep 1
-python3.12 -m pip install --upgrade pip -y
+python3.12 -m pip install --upgrade pip
 sleep 1
-python3.12 -m pip install ansible --no-input -y
+python3.12 -m pip install ansible --no-input
 sleep 1
 
 # ====== [階段 2] 進入專案根目錄 ======
