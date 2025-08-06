@@ -7,19 +7,13 @@ set -e
 echo "[1/5] 系統與 Python 環境準備..."
 sudo dnf update
 sleep 1
-sudo dnf install -y python3.12-devel
+sudo dnf install python3.12-pip
 sleep 1
-if [ ! -d ".venv" ]; then
-  python3 -m venv .venv
-  sleep 1
-fi
-source .venv/bin/activate
+python3.12 -m ensurepip --upgrade
 sleep 1
-pip install --upgrade pip
+python3.12 -m pip install --upgrade pip
 sleep 1
-pip install ansible requests joblib tqdm
-sleep 1
-echo "Virtual environment and Ansible are ready."
+python3.12 -m pip install ansible --no-input
 sleep 1
 
 # ====== [階段 2] 進入專案根目錄 ======
@@ -32,13 +26,6 @@ echo "[3/5] 執行 Ansible Playbook 安裝 k3s..."
 ansible-playbook -i ansible/inventories/hosts.ini ansible/playbooks/install_k3s.yaml
 sleep 1
 
-echo "重新載入 bash 設定..."
-source ~/.bashrc
-sleep 1
-
-echo "查詢所有命名空間的 Pod 狀態..."
-KUBECONFIG="$HOME/.k3s/k3s.yaml" kubectl get po -A
-sleep 1
 
 echo "k3s 自動化安裝完成！"
 sleep 1
