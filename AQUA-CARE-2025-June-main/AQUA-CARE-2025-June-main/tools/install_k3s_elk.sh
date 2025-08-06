@@ -5,15 +5,15 @@ set -e
 
 # ====== [階段 1] 系統與 Python 環境準備 ======
 echo "[1/5] 系統與 Python 環境準備..."
-sudo dnf update
+sudo dnf update -y
 sleep 1
-sudo dnf install python3.12-pip
+sudo dnf install python3.12-pip -y
 sleep 1
 python3.12 -m ensurepip --upgrade
 sleep 1
-python3.12 -m pip install --upgrade pip
+python3.12 -m pip install --upgrade pip -y
 sleep 1
-python3.12 -m pip install ansible --no-input
+python3.12 -m pip install ansible --no-input -y
 sleep 1
 
 # ====== [階段 2] 進入專案根目錄 ======
