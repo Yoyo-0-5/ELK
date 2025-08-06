@@ -1,76 +1,82 @@
 ---
 - name: Install k3s and configure kubeconfig
   hosts: all
-  become: yes
+  become: true
   gather_facts: true
   tasks:
     - name: Install k3s using official script
-      shell: curl -sfL https://get.k3s.io | sh -
+      ansible.builtin.shell: set -o pipefail && curl -sfL https://get.k3s.io | sh -
       args:
         creates: /usr/local/bin/k3s
 
     - name: Ensure .k3s directory exists in home
       become: false
-      file:
-        path: "{{ lookup('env','HOME') }}/.k3s"
+      ansible.builtin.file:
+        path: "{{ lookup('env', 'HOME') }}/.k3s"
         state: directory
         mode: '0755'
 
     - name: Copy k3s.yaml to user's .k3s directory
-      copy:
+      ansible.builtin.copy:
         src: /etc/rancher/k3s/k3s.yaml
-        dest: "{{ lookup('env','HOME') }}/.k3s/k3s.yaml"
-        remote_src: yes
-        owner: "{{ lookup('env','USER') }}"
-        group: "{{ lookup('env','USER') }}"
+        dest: "{{ lookup('env', 'HOME') }}/.k3s/k3s.yaml"
+        remote_src: true
+        owner: "{{ lookup('env', 'USER') }}"
+        group: "{{ lookup('env', 'USER') }}"
         mode: '0644'
 
     - name: Set KUBECONFIG environment variable in .bashrc
-      lineinfile:
-        path: "{{ lookup('env','HOME') }}/.bashrc"
+      ansible.builtin.lineinfile:
+        path: "{{ lookup('env', 'HOME') }}/.bashrc"
         line: 'export KUBECONFIG=$HOME/.k3s/k3s.yaml'
         state: present
       become: false
 
     - name: Enable kubectl autocompletion in .bashrc
-      lineinfile:
-        path: "{{ lookup('env','HOME') }}/.bashrc"
+      ansible.builtin.lineinfile:
+        path: "{{ lookup('env', 'HOME') }}/.bashrc"
         line: 'source <(kubectl completion bash)'
         state: present
       become: false
 
     - name: Add kubectl alias to .bashrc
-      lineinfile:
-        path: "{{ lookup('env','HOME') }}/.bashrc"
+      ansible.builtin.lineinfile:
+        path: "{{ lookup('env', 'HOME') }}/.bashrc"
         line: 'alias k=kubectl'
         state: present
       become: false
 
     - name: Add kubectl completion for alias k to .bashrc
-      lineinfile:
-        path: "{{ lookup('env','HOME') }}/.bashrc"
+      ansible.builtin.lineinfile:
+        path: "{{ lookup('env', 'HOME') }}/.bashrc"
         line: 'complete -F __start_kubectl k'
         state: present
       become: false
 
-    - name: Display all pods in all namespaces
-      shell: kubectl get pod -A
+    - name: Display all pods in all namespaces (if kubectl exists)
+      ansible.builtin.shell: |
+        if command -v kubectl >/dev/null 2>&1; then
+          kubectl get pod -A
+        else
+          echo "kubectl not found, skipping pod display."
+        fi
       environment:
-        KUBECONFIG: "{{ lookup('env','HOME') }}/.k3s/k3s.yaml"
+        KUBECONFIG: "{{ lookup('env', 'HOME') }}/.k3s/k3s.yaml"
       register: pods_output
       changed_when: false
 
     - name: Install Helm using official script
-      shell: curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+      ansible.builtin.shell: set -o pipefail && curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
       args:
         creates: /usr/local/bin/helm
 
     - name: Add elastic Helm repo
-      shell: helm repo add elastic https://helm.elastic.co
+      ansible.builtin.command: helm repo add elastic https://helm.elastic.co
       args:
-        creates: "{{ lookup('env','HOME') }}/.cache/helm/repository/elastic-index.yaml"
+        creates: "{{ lookup('env', 'HOME') }}/.cache/helm/repository/elastic-index.yaml"
       become: false
 
     - name: Update Helm repos
-      shell: helm repo update
+      ansible.builtin.command: helm repo update
       become: false
+      changed_when: false

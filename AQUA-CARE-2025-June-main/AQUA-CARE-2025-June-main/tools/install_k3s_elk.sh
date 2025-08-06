@@ -5,9 +5,9 @@ set -e
 
 # ====== [階段 1] 系統與 Python 環境準備 ======
 echo "[1/5] 系統與 Python 環境準備..."
-sudo apt update
+sudo dnf update
 sleep 1
-sudo apt install -y python3.12-venv
+sudo dnf install -y python3.12-devel
 sleep 1
 if [ ! -d ".venv" ]; then
   python3 -m venv .venv

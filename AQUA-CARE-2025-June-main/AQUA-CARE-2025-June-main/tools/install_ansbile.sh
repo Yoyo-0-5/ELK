@@ -2,10 +2,10 @@
 set -e
 
 # Update package list
-sudo apt update
+sudo dnf update
 
 # Ensure Python venv module is installed
-sudo apt install -y python3.12-venv
+sudo dnf install -y python3.12-devel
 
 # Create Python virtual environment if not exists
 if [ ! -d ".venv" ]; then
