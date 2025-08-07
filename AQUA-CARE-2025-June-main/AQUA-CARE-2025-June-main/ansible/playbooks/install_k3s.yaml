@@ -69,7 +69,7 @@
     - name: Install Helm using official script
       ansible.builtin.shell: set -o pipefail && curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
       args:
-        creates: /usr/local/bin/helm
+        creates: /usr/bin
 
     - name: Add elastic Helm repo
       ansible.builtin.command: helm repo add elastic https://helm.elastic.co
