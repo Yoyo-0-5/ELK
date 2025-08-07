@@ -62,14 +62,14 @@
         fi
       environment:
         KUBECONFIG: "{{ lookup('env', 'HOME') }}/.k3s/k3s.yaml"
-        PATH: "{{ lookup('env', 'PATH') }}:/usr/bin"
+        PATH: "{{ lookup('env', 'PATH') }}:/usr/local/bin"
       register: pods_output
       changed_when: false
 
     - name: Install Helm using official script
       ansible.builtin.shell: set -o pipefail && curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
       args:
-        creates: /usr/bin
+        creates: /usr/local/bin/helm
 
     - name: Add elastic Helm repo
       ansible.builtin.command: helm repo add elastic https://helm.elastic.co
@@ -78,7 +78,7 @@
       become: false
       environment:
         KUBECONFIG: "{{ lookup('env', 'HOME') }}/.k3s/k3s.yaml"
-        PATH: "{{ lookup('env', 'PATH') }}:/usr/bin"
+        PATH: "{{ lookup('env', 'PATH') }}:/usr/local/bin"
 
     - name: Update Helm repos
       ansible.builtin.command: helm repo update
