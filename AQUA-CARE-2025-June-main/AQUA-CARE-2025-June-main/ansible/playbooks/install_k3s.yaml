@@ -75,8 +75,12 @@
       args:
         creates: "{{ lookup('env', 'HOME') }}/.cache/helm/repository/elastic-index.yaml"
       become: false
+      environment:
+        KUBECONFIG: "{{ lookup('env', 'HOME') }}/.k3s/k3s.yaml"
 
     - name: Update Helm repos
       ansible.builtin.command: helm repo update
       become: false
       changed_when: false
+      environment:
+        KUBECONFIG: "{{ lookup('env', 'HOME') }}/.k3s/k3s.yaml"
